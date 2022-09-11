@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { fetch_user_profile } from '../Redux/action';
 import Navbar from './Navbar';
+import NotFound from './NotFound';
 
 
 const backgrounds = [
@@ -31,9 +32,10 @@ const backgrounds = [
 export default function DisplayProfile() {
 
     const [user, setUser] = useState('');
+    const [val, setVal] = useState(0);
 
     const profile = useSelector((state) => state.profile)
-    console.log(profile.profile)
+    //console.log(profile.profile)
 
 
     const dispatch = useDispatch();
@@ -41,12 +43,13 @@ export default function DisplayProfile() {
     const handleUser = (e) => {
         setUser(e.target.value);
     }
-// useEffect(()=>{
-//     dispatch(fetch_user_profile());
-// },[user])
+
     const handledispatchValue = (user) => {
+        setVal(val+1)
+        console.log('x',val)
         dispatch(fetch_user_profile(user));
     }
+  
 
 
     return (
@@ -85,12 +88,12 @@ export default function DisplayProfile() {
                                 onClick={() => handledispatchValue(user)}>
                                 Search
                             </Button>
-                        </Stack>
+                        </Stack> 
                     </Flex>
                 </Center>
             </Box>
-
-            {profile.profile == undefined || Object.keys(profile.profile).length == 0 ? null :
+            {profile.profile == undefined && val > 0 ? <NotFound/> : 
+            profile.profile == undefined || Object.keys(profile.profile).length == 0 ? null :
             <Box>
                 <Container maxW={'7xl'}>
                     <Stack
@@ -207,7 +210,8 @@ export default function DisplayProfile() {
                     </Stack>
                 </Container>
             </Box>
-                        }
+                        
+                    }
 
         </>
     );
